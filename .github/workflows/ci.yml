@@ -1,0 +1,28 @@
+name: CI
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Free Pascal and Pastel
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y fpc fpc-source git
+          git clone --depth 1 https://github.com/azrov/pastel "$HOME/pastel"
+          sh "$HOME/pastel/build.sh"
+          echo "$HOME/pastel/bin" >> "$GITHUB_PATH"
+      - name: Every package builds and passes its tests
+        run: |
+          for p in */pastel.toml; do
+            d="$(dirname "$p")"
+            echo "== $d"
+            (cd "$d" && pastel build && pastel test && pastel fmt --check)
+          done
+      - name: And builds for Windows
+        run: |
+          pastel doctor --install windows
+          for p in */pastel.toml; do (cd "$(dirname "$p")" && pastel build --target windows); done

@@ -1,0 +1,12 @@
+# Pastel project file
+
+[project]
+name = "serial"
+version = "0.1.0"
+description = "Serial ports: COM on Windows, /dev/ttyUSB0 on Linux"
+pastel = "1.0"          # the Pastel version this project is made for
+type = "lib"             # units for other projects; no program of its own
+
+[build]
+mode = "objfpc"          # objfpc or delphi
+defines = []
